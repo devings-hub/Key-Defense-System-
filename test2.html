@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futuristic Terminal - System Access</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Rajdhani:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #050508;
+            --panel-bg: rgba(13, 16, 27, 0.85);
+            --neon-blue: #00f0ff;
+            --neon-red: #ff0055;
+            --neon-green: #00ff66;
+            --text-main: #e2e8f0;
+            --text-dim: #8a99ad;
+            --border-blue: rgba(0, 240, 255, 0.3);
+            --border-red: rgba(255, 0, 85, 0.4);
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 0, 85, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 240, 255, 0.08) 0%, transparent 40%),
+                linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 30px 30px, 30px 30px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .cyber-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-blue);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.15), inset 0 0 15px rgba(0, 240, 255, 0.05);
+            backdrop-filter: blur(12px);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .cyber-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+            animation: scanline 4s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .card-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .card-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: #ffffff;
+            text-shadow: 0 0 10px var(--neon-blue);
+            text-transform: uppercase;
+        }
+
+        .card-subtitle {
+            font-size: 14px;
+            color: var(--neon-red);
+            letter-spacing: 1.5px;
+            margin-top: 5px;
+            text-transform: uppercase;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--neon-blue);
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .cyber-input {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(5, 5, 8, 0.8);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            border-radius: 6px;
+            color: #ffffff;
+            font-family: 'Fira Code', monospace;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .cyber-input:focus {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        .btn-cyber {
+            width: 100%;
+            padding: 14px 28px;
+            background: linear-gradient(135deg, rgba(255, 0, 85, 0.8), rgba(120, 0, 40, 0.9));
+            border: 1px solid var(--neon-red);
+            border-radius: 6px;
+            color: #ffffff;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.3);
+        }
+
+        .btn-cyber:hover {
+            background: linear-gradient(135deg, var(--neon-red), rgba(255, 0, 85, 0.9));
+            box-shadow: 0 0 25px rgba(255, 0, 85, 0.7);
+            transform: translateY(-2px);
+        }
+
+        .btn-blue {
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(0, 100, 200, 0.4));
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+            width: auto;
+            display: inline-block;
+        }
+
+        .btn-blue:hover {
+            background: linear-gradient(135deg, var(--neon-blue), rgba(0, 150, 255, 0.8));
+            color: #000;
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.7);
+        }
+
+        .error-msg {
+            background: rgba(255, 0, 85, 0.15);
+            border: 1px solid var(--neon-red);
+            color: #ff6688;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            display: none;
+            text-align: center;
+            letter-spacing: 0.5px;
+            animation: shake 0.4s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+
+        .dashboard-page {
+            display: none;
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .user-greeting {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 42px;
+            font-weight: 800;
+            color: #ffffff;
+            text-shadow: 0 0 20px var(--neon-blue);
+            margin-bottom: 6px;
+        }
+
+        .status-badge {
+            font-family: 'Fira Code', monospace;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--neon-green);
+            text-align: left;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px rgba(0, 255, 102, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-badge::before {
+            content: '';
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background-color: var(--neon-green);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--neon-green);
+            animation: blink 1.2s infinite alternate;
+        }
+
+        @keyframes blink {
+            from { opacity: 0.3; }
+            to { opacity: 1; }
+        }
+
+        .editor-container {
+            background: rgba(5, 5, 8, 0.6);
+            border: 1px solid var(--border-blue);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 25px;
+        }
+
+        .editor-label {
+            font-size: 14px;
+            color: var(--text-dim);
+            margin-bottom: 12px;
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .paragraph-box {
+            background: rgba(13, 16, 27, 0.9);
+            border: 1px dashed var(--border-blue);
+            border-radius: 6px;
+            padding: 16px;
+            margin-bottom: 16px;
+            color: var(--text-main);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        .paragraph-box p {
+            margin-bottom: 12px;
+        }
+
+        .paragraph-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        .actions-toolbar {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .cyber-textarea {
+            width: 100%;
+            height: 120px;
+            background: rgba(5, 5, 8, 0.8);
+            border: 1px solid var(--border-blue);
+            border-radius: 6px;
+            color: var(--text-main);
+            padding: 14px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 16px;
+            outline: none;
+            resize: vertical;
+            margin-bottom: 12px;
+        }
+
+        .cyber-textarea:focus {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+        }
+
+        .btn-logout {
+            background: transparent;
+            border: 1px solid var(--neon-red);
+            color: var(--neon-red);
+            padding: 8px 16px;
+            font-size: 13px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .btn-logout:hover {
+            background: var(--neon-red);
+            color: #ffffff;
+            box-shadow: 0 0 15px var(--neon-red);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- LOGIN CARD -->
+        <div id="loginCard" class="cyber-card">
+            <div class="card-header">
+                <div class="card-title">GATEWAY ACCESS</div>
+                <div class="card-subtitle">AUTHENTICATION REQUIRED</div>
+            </div>
+
+            <div id="errorMsg" class="error-msg">
+                USERNAME ATAU PASSWORD SALAH!
+            </div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" class="cyber-input" placeholder="Masukkan username..." autocomplete="off" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" class="cyber-input" placeholder="Masukkan password..." required>
+                </div>
+
+                <button type="submit" class="btn-cyber">AUTHENTICATE</button>
+            </form>
+        </div>
+
+        <!-- DASHBOARD PAGE (AFTER LOGIN) -->
+        <div id="dashboardPage" class="cyber-card dashboard-page">
+            <div class="header-top">
+                <div>
+                    <h2 class="user-greeting">Hai!, Abi</h2>
+                    <h5 class="status-badge">System Compromised!</h5>
+                </div>
+                <button onclick="handleLogout()" class="btn-logout">LOGOUT</button>
+            </div>
+
+            <!-- PARAGRAPH WORKSPACE TEMPLATE -->
+            <div class="editor-container">
+                <span class="editor-label">// PARAGRAPH WORKSPACE ( &lt;p&gt; &lt;/p&gt; )</span>
+                
+                <div id="paragraphDisplay" class="paragraph-box">
+                    <p>Selamat datang di sistem utama. Akses telah berhasil diberikan kepada akun Abi. Anda dapat menulis dan menambah paragraf baru di bawah ini.</p>
+                </div>
+
+                <textarea id="newParagraphText" class="cyber-textarea" placeholder="Tulis teks paragraf baru di sini..."></textarea>
+                
+                <div class="actions-toolbar">
+                    <button type="button" onclick="addParagraph()" class="btn-cyber btn-blue">TAMBAH PARAGRAF &lt;p&gt;</button>
+                    <button type="button" onclick="clearParagraphs()" class="btn-cyber" style="background: rgba(255,0,85,0.2); border-color: var(--neon-red); color: var(--neon-red);">BERSIHKAN TERAKHIR</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fungsi untuk Suara Suara JARVIS / AI Voice
+        function playJarvisVoice(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); // Hentikan suara sebelumnya jika ada
+
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.9;  // Kecepatan agak pelan berwibawa
+                utterance.pitch = 0.75; // Pitch nada rendah ala AI JARVIS
+
+                // Cari karakter suara pria/AI Bahasa Inggris
+                const voices = window.speechSynthesis.getVoices();
+                const jarvisVoice = voices.find(voice => 
+                    voice.lang.includes('en') && 
+                    (voice.name.includes('Male') || voice.name.includes('David') || voice.name.includes('Google US English') || voice.name.includes('Natural'))
+                );
+
+                if (jarvisVoice) {
+                    utterance.voice = jarvisVoice;
+                }
+
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        // Inisialisasi daftar suara di browser
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = () => {
+                window.speechSynthesis.getVoices();
+            };
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const usn = document.getElementById('username').value.trim();
+            const pass = document.getElementById('password').value.trim();
+            const errorMsg = document.getElementById('errorMsg');
+            const loginCard = document.getElementById('loginCard');
+            const dashboardPage = document.getElementById('dashboardPage');
+
+            if (usn === 'abi914' && pass === '20149') {
+                errorMsg.style.display = 'none';
+                
+                loginCard.style.opacity = '0';
+                loginCard.style.transform = 'scale(0.95)';
+                
+                setTimeout(() => {
+                    loginCard.style.display = 'none';
+                    dashboardPage.style.display = 'block';
+                    
+                    // MEMBUNYIKAN SUARA ALA JARVIS SAAT MASUK DASHBOARD
+                    playJarvisVoice("System Compromised. Welcome back, Abi.");
+                }, 400);
+            } else {
+                errorMsg.style.display = 'block';
+                document.getElementById('password').value = '';
+            }
+        }
+
+        function handleLogout() {
+            const loginCard = document.getElementById('loginCard');
+            const dashboardPage = document.getElementById('dashboardPage');
+            
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+            }
+
+            dashboardPage.style.display = 'none';
+            loginCard.style.display = 'block';
+            
+            setTimeout(() => {
+                loginCard.style.opacity = '1';
+                loginCard.style.transform = 'scale(1)';
+            }, 50);
+
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('errorMsg').style.display = 'none';
+        }
+
+        function addParagraph() {
+            const textarea = document.getElementById('newParagraphText');
+            const display = document.getElementById('paragraphDisplay');
+            const text = textarea.value.trim();
+
+            if (text !== '') {
+                const p = document.createElement('p');
+                p.textContent = text;
+                p.style.opacity = '0';
+                p.style.transform = 'translateY(10px)';
+                p.style.transition = 'all 0.4s ease';
+                
+                display.appendChild(p);
+                textarea.value = '';
+
+                setTimeout(() => {
+                    p.style.opacity = '1';
+                    p.style.transform = 'translateY(0)';
+                }, 50);
+            }
+        }
+
+        function clearParagraphs() {
+            const display = document.getElementById('paragraphDisplay');
+            if (display.lastElementChild) {
+                display.removeChild(display.lastElementChild);
+            }
+        }
+    </script>
+</body>
+</html>
